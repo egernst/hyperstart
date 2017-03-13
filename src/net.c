@@ -765,6 +765,7 @@ static int hyper_setup_interface(struct rtnl_handle *rth,
 	} req;
 	int ifindex;
 	struct hyper_ipaddress *ip;
+	perror("EERNST: entrance to hyper_setup_interface\n");
 
 	if (!iface->device || list_empty(&iface->ipaddresses)) {
 		fprintf(stderr, "interface information incorrect\n");
@@ -789,6 +790,8 @@ static int hyper_setup_interface(struct rtnl_handle *rth,
 
 	req.ifa.ifa_index = ifindex;
 	req.ifa.ifa_scope = 0;
+	
+	fprintf(stderr, "EERNST: hyper_setup_interface -- looping over interfaces\n");
 
 	list_for_each_entry(ip, &iface->ipaddresses, list) {
 		if (get_addr_ipv4((uint8_t *)&data, ip->addr) <= 0) {
@@ -814,6 +817,7 @@ static int hyper_setup_interface(struct rtnl_handle *rth,
 		}
 	}
 
+	fprintf(stderr, "EERNST: hyper_setup_interface -- set interface name: \n");
 	if (iface->new_device_name && strcmp(iface->new_device_name, iface->device)) {
 		fprintf(stdout, "Setting interface name to %s\n", iface->new_device_name);
 		hyper_set_interface_name(rth, ifindex, iface->new_device_name);
@@ -827,6 +831,7 @@ static int hyper_setup_interface(struct rtnl_handle *rth,
 			return -1;
 		}
 	}
+	fprintf(stderr, "EERNST: hyper_setup_interface -- post MTU.\n");
 
 	if (hyper_up_nic(rth, ifindex) < 0) {
 		fprintf(stderr, "up device %d failed\n", ifindex);
@@ -937,11 +942,15 @@ int hyper_setup_network(struct hyper_pod *pod)
 	struct hyper_route *rt;
 	struct rtnl_handle rth;
 
+	fprintf(stderr, "EERNST: Entrance of hyper-setup-network\n");
+
 	if (netlink_open(&rth) < 0)
 		return -1;
 
 	for (i = 0; i < pod->i_num; i++) {
 		iface = &pod->iface[i];
+
+		fprintf(stderr, "EERNST, loop idx %d\n",i);
 
 		ret = hyper_setup_interface(&rth, iface);
 		if (ret < 0) {

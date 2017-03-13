@@ -402,6 +402,7 @@ int hyper_mkdir(char *hyper_path, mode_t mode)
 		*p = '/';
 	}
 
+	fprintf(stdout, "EERNST:::::: create directory %s\n", path);
 	fprintf(stdout, "create directory %s\n", path);
 	if (mkdir(path, mode) < 0 && errno != EEXIST) {
 		perror("failed to create directory");

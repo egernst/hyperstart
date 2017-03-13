@@ -471,11 +471,14 @@ static int hyper_setup_shared(struct hyper_pod *pod)
 
 static int hyper_setup_pod(struct hyper_pod *pod)
 {
+	perror("EERNST: in hyper setup pod");
 	/* create tmp proc directory */
 	if (hyper_mkdir("/tmp/hyper/proc", 0755) < 0) {
 		perror("create tmp proc failed");
 		return -1;
 	}
+
+	perror("EERNST: post tmp proc setup\n");
 
 	if (hyper_setup_network(pod) < 0) {
 		fprintf(stderr, "setup network failed\n");
